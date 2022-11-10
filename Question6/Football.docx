@@ -1,0 +1,200 @@
+Create table player
+(
+Playerid Int  NOT NULL AUTO_INCREMENT ,
+PlayerName varchar(50),
+Birthday varchar(50),
+level int,
+PRIMARY KEY (`Playerid`)
+)
+
+
+Create table team(
+Teamid Int  NOT NULL AUTO_INCREMENT ,
+TeamName varchar(50),
+Cityd int ,
+PRIMARY KEY (`Teamid`) ,
+FOREIGN KEY (CityId) REFERENCES City(CityId)
+)
+
+
+create table stadium(
+stadiumId  int not null  auto_increment,
+stadiumName   varchar(50),
+cityId int,
+primary key stadiumId  (stadiumId),
+FOREIGN KEY (CityId) REFERENCES City(CityId)
+
+)
+
+
+create   table  registration (
+registrationId  int not null  auto_increment ,
+playerId int ,
+teamId int,
+sesion int,
+price  int ,
+primary key registrationId  ( registrationId )    
+
+
+
+
+create table game(
+gameId  int not null  auto_increment,
+name  varchar(50),
+cityId int,
+team1 int,
+team2 int,
+winer int,
+countOfGoals int,
+team1score  int , 
+team2score  int , 
+date char(10),
+
+primary key gameId  (gameId),
+FOREIGN KEY (CityId) REFERENCES City(CityId),
+FOREIGN KEY (team1) REFERENCES team (Teamid),
+FOREIGN KEY (team2) REFERENCES team (Teamid),
+FOREIGN KEY (winer) REFERENCES team (Teamid)
+
+
+)
+
+
+
+
+create   table  City (
+CityId  int not null  auto_increment ,
+name varchar(20),
+primary key City  ( CityId )    
+)
+
+
+
+
+create   table  gameplayers (
+Id  int not null  auto_increment ,
+playerid int,
+gameid int,
+countofGoals int,
+teamid int,
+primary key id  ( id )    ,
+FOREIGN KEY (playerid) REFERENCES player (playerid),
+FOREIGN KEY (gameid) REFERENCES game (gameid),
+FOREIGN KEY (teamid) REFERENCES team (Teamid)
+
+
+)
+
+
+select   ( price ) from registration r  inner join player p on p.Playerid  = r . playerId   where  level =1   group by  r . playerId
+
+
+
+SELECT
+`player`.`PlayerName`,
+`registration`.`price`,
+Sum(`registration`.`price`)
+FROM
+`player`
+Inner Join `registration` ON `registration`.`playerId` = `player`.`Playerid`
+WHERE
+`player`.`level` =  '1'
+GROUP BY
+`player`.`PlayerName`
+
+
+
+
+
+SELECT
+`player`.`PlayerName`,
+
+Max(`registration`.`price`),
+`registration`.`season`
+FROM
+`player`
+Inner Join `registration` ON `registration`.`playerId` = `player`.`Playerid`
+WHERE
+`player`.`level` =  '0'
+GROUP BY
+`player`.`PlayerName`,
+`registration`.`season`
+
+
+
+SELECT
+`City`.`name`,
+Count(`City`.`CityId`)
+FROM
+`team`
+Inner Join `City` ON `City`.`CityId` = `team`.`CityId`
+GROUP BY
+`City`.`name`
+
+
+select   a.TeamName , sum(a.score)   as   score  from 
+(
+SELECT
+`team`.`TeamName`,
+Sum(`game`.`team1score`) score
+FROM
+`team`
+Inner Join `game` ON `team`.`Teamid` = `game`.`team1`
+where  `game`.`date` like '1398%'
+group by `team`.`TeamName`
+
+union all 
+SELECT
+`team`.`TeamName`,
+Sum(`game`.`team2score`) score
+FROM
+`team`
+Inner Join `game` ON `team`.`Teamid` = `game`.`team2`
+where  `game`.`date` like '1398%'
+group by `team`.`TeamName`
+
+)   as   a 
+group by TeamName
+
+
+
+select   a.TeamName , sum (a.score)   as   score  from 
+(
+SELECT
+`team`.`TeamName`,
+Sum(`game`.`team1score`) score
+FROM
+`team`
+Inner Join `game` ON `team`.`Teamid` = `game`.`team1`
+where  `game`.`date` like '1398%'
+group by `team`.`TeamName`
+
+union all 
+SELECT
+`team`.`TeamName`,
+Sum(`game`.`team2score`) score
+FROM
+`team`
+Inner Join `game` ON `team`.`Teamid` = `game`.`team2`
+where  `game`.`date` like '1398%'
+group by `team`.`TeamName`
+
+)   as   a 
+group by TeamName
+order by  a.score 
+LIMIT 1
+
+
+
+SELECT
+`team`.`TeamName`,
+sum(`game`.`countOfGoals`)
+FROM
+`team`
+Inner Join `game` ON `team`.`Teamid` = `game`.`team1`
+where  `game`.`date` like '1398%'
+group by `team`.`TeamName`
+order by  2  desc 
+
+LIMIT 1
+ 
