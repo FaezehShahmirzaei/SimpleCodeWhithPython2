@@ -1,0 +1,14 @@
+Create table Personel(
+PersonelId Int  NOT NULL AUTO_INCREMENT ,
+Name varchar(50),
+Surname varchar(50),
+supId int,
+PRIMARY KEY (`PersonelId`)
+)
+
+
+select   b. name ,a.name , a.supId   from Personel  a  inner join  Personel   b  on  a. PersonelId = b. supId
+ 
+
+select  a.name , a.Surname , (select b. name from   Personel  b where  b.PersonelId = a.supId  )  from Personel  a
+   
