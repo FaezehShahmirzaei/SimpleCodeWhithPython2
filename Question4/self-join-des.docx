@@ -1,0 +1,28 @@
+در self join  جدولیازاطلاعات در اختیتر داریم که همه از یک نوع هستند و با هم در ارتباطند. مثال ساده آن ارتباط کارمندان در شرکت است. ارتباط سرپرستوکارمند او نوعیاز رابطه self join  است که همه کرمنداندر یک جدول قرار دارند و در یک ستون ( سرپرست) به خود جدول مرتبط میشوند.
+اگر بخواهیم مدیرهر فرد را داشته باشیم ارتباط 1 به 1 را خواهیم داشت
+اگر بخواهیم افراد زیر مجموعه هرفرد را داشته باشیم رابطه 1 به چند را خواهیمداشت 
+اگر  در  این جدول هر فرد به طورهمزمان امکان فعالیت در دو واحد و 2 سرپرستت را داشته باشد فیلد اصلی جدول تلفیقی  از کد فرد ورییس وی خواهد بود ورابطه چند به چندرا رقم می زند.
+
+
+
+CREATE TABLE [dbo].[tblEmployeeDetails](
+[emp_id] [bigint] NOT NULL, 
+[emp_name] [nvarchar](200) NULL,    
+[emp_mgr_id] [bigint] NULL, CONSTRAINT [PK_tblEmployeeDetails] PRIMARY KEY CLUSTERED (
+[emp_id] ASC )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY] ) ON [PRIMARY]
+
+
+
+CREATE VIEW AS
+SELECT e1.emp_Id EmployeeId, e1.emp_name EmployeeName, 
+       e1.emp_mgr_id ManagerId, e2.emp_name AS ManagerName
+FROM   tblEmployeeDetails e1
+       JOIN tblEmployeeDetails e2
+       ON e1.emp_mgr_id = e2.emp_id
+
+
+
+ SELECT b.Emp_id, b.Emp_name,e.emp_id as managerID, e.emp_name as managerName
+    FROM Employee b
+    JOIN Employee e ON b.Emp_ID = e.emp_mgr_id
+
